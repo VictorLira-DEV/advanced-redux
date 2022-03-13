@@ -1,0 +1,2 @@
+reducer function must be pure, no side effects, no async functions
+show take an input and return an output
