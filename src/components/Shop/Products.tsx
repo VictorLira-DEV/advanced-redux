@@ -10,6 +10,7 @@ const Products = (props: any) => {
           title='Test'
           price={6}
           description='This is a first product - amazing!'
+          onClick={props.onClick}
         />
       </ul>
     </section>

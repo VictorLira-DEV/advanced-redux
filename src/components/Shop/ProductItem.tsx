@@ -13,7 +13,7 @@ const ProductItem = (props: any) => {
         </header>
         <p>{description}</p>
         <div className={classes.actions}>
-          <button>Add to Cart</button>
+          <button onClick={props.onClick}>Add to Cart</button>
         </div>
       </Card>
     </li>
