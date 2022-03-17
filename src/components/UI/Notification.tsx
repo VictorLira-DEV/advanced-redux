@@ -1,6 +1,12 @@
 import classes from './Notification.module.css';
 
-const Notification = (props: any) => {
+interface Inotification {
+  status: string;
+  title: string;
+  message: string;
+}
+
+const Notification = (props: Inotification) => {
   let specialClasses = '';
 
   if (props.status === 'error') {

@@ -16,7 +16,7 @@ const DUMMY_PRODUCTS = [
   },
 ];
 
-const Products = (props: any) => {
+const Products = () => {
   return (
     <section className={classes.products}>
       <h2>Buy your favorite products</h2>
@@ -29,7 +29,6 @@ const Products = (props: any) => {
               title={item.title}
               price={item.price}
               description={item.description}
-              onClick={props.onClick}
             />
           );
         })}

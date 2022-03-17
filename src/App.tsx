@@ -3,62 +3,57 @@ import Layout from './components/Layout/Layout';
 import Products from './components/Shop/Products';
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, Fragment } from 'react';
-import { uiAction } from './store/ui-slice';
 import Notification from './components/UI/Notification';
-import Axios from 'axios';
+import { sendCartData, fetchCartData } from './store/cart-actions';
 
 let isInitial = true;
+
+interface UI {
+  ui: {
+    cartIsVisible: boolean;
+    notification: {
+      status: string;
+      title: string;
+      message: string;
+    };
+  };
+}
+
+interface cart {
+  cart: {
+    items: [
+      {
+        id: string;
+        price: number;
+        quantity: number;
+        totalPrice: number;
+        name: string;
+      }
+    ];
+    totalQuantity: number;
+    changed: boolean;
+  };
+}
+
 function App() {
   const dispatch = useDispatch();
-  const cartIsVisible = useSelector((state: any) => state.ui.cartIsVisible);
-  const notification = useSelector((state: any) => state.ui.notification);
-  const cart = useSelector((state: any) => state.cart);
+  const cartIsVisible = useSelector((state: UI) => state.ui.cartIsVisible);
+  const notification = useSelector((state: UI) => state.ui.notification);
+  const cart = useSelector((state: cart) => state.cart);
 
   useEffect(() => {
-    console.log(notification);
-    const sendCartData = async function () {
-      try {
-        dispatch(
-          uiAction.showNotification({
-            status: 'pending',
-            title: 'Sending',
-            message: 'Sending cart data',
-          })
-        );
+    dispatch(fetchCartData());
+  }, [dispatch]);
 
-        const response = await Axios({
-          url: 'https://advanced-redux-8a1de-default-rtdb.firebaseio.com/cart.json',
-          method: 'PUT',
-          data: JSON.stringify(cart),
-        });
-
-        if (response.status !== 200) {
-          throw new Error('Sending the cart failed!');
-        }
-
-        dispatch(
-          uiAction.showNotification({
-            status: 'success',
-            title: 'Success!',
-            message: 'Sent cart data successfully',
-          })
-        );
-      } catch (err) {
-        dispatch(
-          uiAction.showNotification({
-            status: 'error',
-            title: 'Error!',
-            message: 'Sending the cart Failed',
-          })
-        );
-      }
-    };
-
+  useEffect(() => {
     if (isInitial) {
       isInitial = false;
       return;
     }
-    sendCartData();
+
+    if (cart.changed) {
+      dispatch(sendCartData(cart));
+    }
   }, [cart, dispatch]);
   return (
     <Fragment>
